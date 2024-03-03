@@ -1,0 +1,7 @@
+*
+!/*.h
+!/*.cpp
+!/.gitignore
+/adjtablev4.cpp
+
+
