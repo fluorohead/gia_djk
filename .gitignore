@@ -2,6 +2,7 @@
 !/*.h
 !/*.cpp
 !/.gitignore
+!/xroconv.zip
 /adjtablev4.cpp
 
 
