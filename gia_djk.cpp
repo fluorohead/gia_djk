@@ -80,7 +80,7 @@ void GraphIPv4::printGraph() {
         cout << "\n[ NodeId: " << oneNode.to_str() <<" ]" << endl;
         for (auto && oneLink : allLinks) {
             linksCount++;
-            cout << "  > iface: " << right << setw(15) << oneLink.localIP.to_str() << "/" << v4mnp::mask_len(oneLink.mask.as_u32i) << "    iface_cost: " << left << setw(5) << oneLink.cost <<
+            cout << "  > iface: " << right << setw(15) << oneLink.localIP.to_str() << "/" << v4mnp::mask_len(oneLink.mask()) << "    iface_cost: " << left << setw(5) << oneLink.cost <<
                 "    remote_ip: " << setw(15) << oneLink.neighIP.to_str() << "    neigh.: [" << oneLink.neighID.to_str() << "]" << right << endl;
         }
     }
@@ -178,7 +178,7 @@ void DjkIPv4::calcTree() {
             if (tree[currNodeID].cumulCost != MAX_COST) { // проверка на MAX_COST, т.к. будет переполнение и проход через 0 в случае вычисления evalCost
                 for (auto && link : *(graph->getLinks(currNodeID))) { // перебираем все линки родительского узла
                     if (debugMode) cout << "processing: " << left << setw(15) << currNodeID.to_str() << "; iface: " << setw(18) << left
-                             << ((link.localIP.to_str() + "/" + to_string(v4mnp::mask_len(link.mask.as_u32i)))) << "; if_cost: " << setw(6) << link.cost << "; neigh.: " << setw(15);
+                             << ((link.localIP.to_str() + "/" + to_string(v4mnp::mask_len(link.mask())))) << "; if_cost: " << setw(6) << link.cost << "; neigh.: " << setw(15);
                     if ((link.mask == v4mnp::LOOPBACK_MASK) or (link.neighIP == v4mnp::UNKNOWN_ADDR)) { // лупбеки и тупиковые сети в рассчётах не используются
                         if (debugMode) cout << " - loopback or stub is out of calculation" << endl;
                         continue;
@@ -264,7 +264,7 @@ void DjkIPv4::printRIB() {
     cout << "----------------------------------------------------------------" << endl;
     cout << "\nRouter Information Base:\n\n";
     for (auto && [net, onri] : RIB) {
-        cout << "Net: " <<  net.net.to_str() << "/" << v4mnp::mask_len(net.mask.as_u32i) << endl;
+        cout << "Net: " <<  net.net.to_str() << "/" << v4mnp::mask_len(net.mask()) << endl;
         for (auto && [origNode, riVec] : onri) {
             for (auto && ri : riVec) {
                 cout << "  > via iface: " << ri.localIP.to_str() << "; next-hop: " <<  ri.nexthopIP.to_str()
@@ -294,7 +294,7 @@ void DjkIPv4::fillNodesRI() {
 inline void DjkIPv4::getPath(const reiVec &reivec, vector<reiVec> &paths) {
     auto childID {reivec.back().parentID};
     for (auto && [pID, pairs] : tree[childID].eqcoParents) { // pID - parent ID
-        if (pID.as_u32i == v4mnp::UNKNOWN_ADDR) { // достигли реверсивного конца (т.е. SRC)
+        if (pID() == v4mnp::UNKNOWN_ADDR) { // достигли реверсивного конца (т.е. SRC)
             paths.push_back(reivec); // записать получившийся вектор-путь в paths
             break;
         } else {

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(djk_ipv4 main.cpp
     gia_djk.h gia_djk.cpp
-    adjtablev4.cpp
+
     ../gia_ipmnp/gia_ipmnp.h
     ../gia_ipmnp/gia_ipmnp.cpp
 
