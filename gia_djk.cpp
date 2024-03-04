@@ -154,7 +154,7 @@ void DjkIPv4::printTree() {
 
 
 // выбирает из unseen узел с минимальным кумулятивным костом
-inline nodeIDv4_t DjkIPv4::getMinCumCostNodeID() {
+nodeIDv4_t DjkIPv4::getMinCumCostNodeID() {
     u32i minCost {MAX_COST};
     nodeIDv4_t retValue {v4mnp::UNKNOWN_ADDR};
     for (auto && nodeID : unseen) {
@@ -291,7 +291,7 @@ void DjkIPv4::fillNodesRI() {
 
 
 // рекурсия пути : выходим из dst и идём, пока не достигнем node.parent == UNKNOWN_NODE_ID
-inline void DjkIPv4::getPath(const reiVec &reivec, vector<reiVec> &paths) {
+void DjkIPv4::getPath(const reiVec &reivec, vector<reiVec> &paths) {
     auto childID {reivec.back().parentID};
     for (auto && [pID, pairs] : tree[childID].eqcoParents) { // pID - parent ID
         if (pID() == v4mnp::UNKNOWN_ADDR) { // достигли реверсивного конца (т.е. SRC)
@@ -309,7 +309,7 @@ inline void DjkIPv4::getPath(const reiVec &reivec, vector<reiVec> &paths) {
 
 
 // с помощью обратной трассировки от dst к src рассчитывает все возможные пути
-inline void DjkIPv4::calcPathsToNode(nodeIDv4_t dstNodeID, vector<reiVec> &paths) {
+void DjkIPv4::calcPathsToNode(nodeIDv4_t dstNodeID, vector<reiVec> &paths) {
     getPath({{IPv4_Addr{v4mnp::UNKNOWN_ADDR}, dstNodeID, IPv4_Addr{v4mnp::UNKNOWN_ADDR}, IPv4_Addr{v4mnp::UNKNOWN_ADDR}}}, paths); // init reachInfo : childID = UNKNOWN_NODE_ID, parentID = dstNodeID
     if (debugMode) {
         cout << "----------------------------------------------------------------" << endl;
@@ -329,7 +329,7 @@ inline void DjkIPv4::calcPathsToNode(nodeIDv4_t dstNodeID, vector<reiVec> &paths
 
 
 // возвращает все возможные маршруты до dst
-inline map<nextHopV4_t, routeThru_t> DjkIPv4::getRoutesToNode(nodeIDv4_t dstNodeID) {
+map<nextHopV4_t, routeThru_t> DjkIPv4::getRoutesToNode(nodeIDv4_t dstNodeID) {
     map <IPv4_Addr,routeThru_t> retValue;
     vector <reiVec> allPathsToDst;
     calcPathsToNode(dstNodeID, allPathsToDst);
