@@ -2,8 +2,9 @@
 !/*.h
 !/*.cpp
 !/.gitignore
-!/CMakeLists.txt
-!/CMakeLists.txt.user
 /adjtablev4.cpp
+
+
+
 
 

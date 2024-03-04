@@ -197,11 +197,11 @@ void DjkIPv4::calcTree() {
                         if (debugMode) cout << " - eval. cost (" << evalCost << ") is worse !" << right << endl;
                     }
                 }
-            } else { // если кумулятивный кост = MAX_COST, нет полноценной двусторонней смежности -> удаляем узел из графа
+            } else { // если кумулятивный кост = MAX_COST -> нет полноценной двусторонней смежности -> удаляем узел из графа
                 if (debugMode) cout << "\nRemoving " << currNodeID.to_str() << " due to cumulative cost == MAX_COST !" << endl;
                 tree.erase(currNodeID);
             }
-            unseen.erase(currNodeID); // обработали текущий узел => убираем из списка непосещённых
+            unseen.erase(currNodeID); // обработали текущий узел -> убираем его из списка непосещённых
             if (debugMode) printTree();
         }
         ////////////////////////////////
@@ -211,7 +211,7 @@ void DjkIPv4::calcTree() {
 }
 
 
-// пересчитывает кумулятивный кост маршрутной записи до сети = кум. кост до оригинатора + кост линка на оригинаторе
+// пересчитывает кумулятивный кост маршрутной записи до сети == кум. кост до оригинатора + кост линка на оригинаторе
 inline void DjkIPv4::recalcNetCost(roiVec &roivec, u32i linkCost) {
     for (auto && ri : roivec) {
         ri.cumulCost += linkCost;
