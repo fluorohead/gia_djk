@@ -13,7 +13,7 @@ using nextHopV4_t = IPv4_Addr;
 using nodeIDv4_t  = IPv4_Addr;
 using origIDv4_t  = IPv4_Addr;
 
-constexpr u32i MAX_COST = 65535;
+constexpr u32i MAX_COST = 0xFFFFFFFF;
 
 struct dstNetv4_t {
     IPv4_Addr net;
@@ -26,7 +26,7 @@ struct linkAdjStr_t {
     string NodeID;
     string localIP;
     string mask;
-    u32i cost; // local link cost
+    u32i cost; // локальный кост линка
     string neighIP;
     string neighID;
 };
@@ -34,7 +34,7 @@ struct linkAdjStr_t {
 struct linkAdjv4_t {
     IPv4_Addr localIP;
     IPv4_Addr mask;
-    u32i cost; // local link cost
+    u32i cost; // локальный кост линка
     IPv4_Addr neighIP;
     nodeIDv4_t neighID;
 };
@@ -57,14 +57,14 @@ struct leafv4_t {
 };
 
 struct routeInfo_t {
-    IPv4_Addr localIP; // local egress-port id
-    u32i cumulCost; // cumulative cost to dst
-    IPv4_Addr nexthopIP; // next-hop via egress-port
+    IPv4_Addr localIP; // id локального исходящего порта
+    u32i cumulCost; // кумулятивный кост до dst
+    IPv4_Addr nexthopIP; // next-hop через исходящий порт
 };
 
 struct routeThru_t {
-    IPv4_Addr localIP; // local egress-port id
-    u32i cumulCost; // cumulative cost to dst
+    IPv4_Addr localIP; // id локального исходящего порта
+    u32i cumulCost; // кумулятивный кост до dst
 };
 
 using laVec  = vector <linkAdjv4_t>;
@@ -74,7 +74,7 @@ using roiVec = vector <routeInfo_t>;
 enum class graphStates {Idle, Populating};
 enum class djkStates {Idle, Calculations, Ready, ErrInGraph};
 
-////// OSPF Data Base for IPv4
+////// OSPF база данных для IPv4
 class GraphIPv4 {
     map <nodeIDv4_t,laVec> graph; // хэш-таблица узлов, построенная из данных о стаб-сетях и соседях
     map <nodeIDv4_t,string> hostnames; // хэш-таблица символьных имён
@@ -82,9 +82,9 @@ class GraphIPv4 {
 
 public:
     GraphIPv4() {};
-    void addLink(nodeIDv4_t nodeID, linkAdjv4_t link); // add one adjacency link
-    void addLinks(vector <linkAdjStr_t> *table); // load adjacency links from table
-    void addLinksFromFile(const string &fn); // load adjacency table from binary file
+    void addLink(nodeIDv4_t nodeID, linkAdjv4_t link); // добавляет один линк смежности
+    void addLinks(vector <linkAdjStr_t> *table);  // добавляет все линки смежности из переданной таблицы
+    void addLinksFromFile(const string &fn); // загружает все линки смежности из двоичного файла
     void addName(nodeIDv4_t nodeID, const string &hostname) { hostnames[nodeID] = hostname; }; // add hostname
     void printGraph();
     graphStates getState() { return state; };
@@ -97,7 +97,7 @@ public:
 };
 
 
-////// Dijkstra Algorithm for IPv4
+////// Dijkstra-алгоритм для IPv4
 class DjkIPv4 {
     djkStates state {djkStates::Idle};
     GraphIPv4 *graph;

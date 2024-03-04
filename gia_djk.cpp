@@ -16,6 +16,7 @@ bool operator==(const dstNetv4_t& dst1, const dstNetv4_t& dst2) {
 extern const array <string,4> djkStStr {"idle", "calculations", "ready", "error in graph data" };
 
 
+// добавляет один однонаправленный линк (смежность, adjacency) в граф
 void GraphIPv4::addLink(nodeIDv4_t nodeID, linkAdjv4_t link) {
     if (state == graphStates::Idle) {
         state = graphStates::Populating;
@@ -24,7 +25,7 @@ void GraphIPv4::addLink(nodeIDv4_t nodeID, linkAdjv4_t link) {
     }
 };
 
-
+// добавляет все однонаправленные линки из списка смежностей
 void GraphIPv4::addLinks(vector <linkAdjStr_t> *table) {
     if (state == graphStates::Idle) {
         state = graphStates::Populating;
@@ -35,7 +36,7 @@ void GraphIPv4::addLinks(vector <linkAdjStr_t> *table) {
     }
 }
 
-
+// пополняет граф смежностей информацией из двоичного файла
 void GraphIPv4::addLinksFromFile(const string &fn) {
      struct rec_t {
          u32i nodeID;
@@ -72,7 +73,7 @@ void GraphIPv4::addLinksFromFile(const string &fn) {
     }
 }
 
-
+// отображает весь граф в консоль
 void GraphIPv4::printGraph() {
     size_t linksCount {0};
     cout << "\nGraph database" << endl;
@@ -105,7 +106,7 @@ void DjkIPv4::RunCalc() {
 }
 
 
-// если нужно подставить другую БД или rootID, но не хочется плодить ещё один объект дейкстры,
+// если нужно подставить иную БД или rootID, но не хочется плодить другой объект дейкстры, то
 // дожидаемся текущих рассчётов и вызываем reinit
 void DjkIPv4::reinit(nodeIDv4_t srcID, GraphIPv4 *db, bool debug) {
     debugMode = debug;
@@ -117,7 +118,7 @@ void DjkIPv4::reinit(nodeIDv4_t srcID, GraphIPv4 *db, bool debug) {
 }
 
 
-// инициализирует граф начальными значениями
+// инициализирует дерево начальными значениями
 void DjkIPv4::initTree() {
     tree.clear();
     unseen.clear();
@@ -127,7 +128,7 @@ void DjkIPv4::initTree() {
     }
 }
 
-
+// отображает текущее состояние дерева в консоль
 void DjkIPv4::printTree() {
     cout << endl;
     cout << "---------------------------------------------------------------------------------------------------------------" << endl;
@@ -180,7 +181,7 @@ void DjkIPv4::calcTree() {
                     if (debugMode) cout << "processing: " << left << setw(15) << currNodeID.to_str() << "; iface: " << setw(18) << left
                              << ((link.localIP.to_str() + "/" + to_string(v4mnp::mask_len(link.mask())))) << "; if_cost: " << setw(6) << link.cost << "; neigh.: " << setw(15);
                     if ((link.mask == v4mnp::LOOPBACK_MASK) or (link.neighIP == v4mnp::UNKNOWN_ADDR)) { // лупбеки и тупиковые сети в рассчётах не используются
-                        if (debugMode) cout << " - loopback or stub is out of calculation" << endl;
+                        if (debugMode) cout << " <loopback or stub is out of calculation>" << endl;
                         continue;
                     }
                     auto evalCost = tree[currNodeID].cumulCost + link.cost; // оценочная стоимость для каждого дочернего, сидящего за этим линком
