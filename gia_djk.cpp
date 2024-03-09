@@ -6,7 +6,7 @@
 #include "../gia_ipmnp/gia_ipmnp.h"
 
 bool operator<(const dstNetv4_t& dst1, const dstNetv4_t& dst2) {
-    return (dst1.net & dst1.mask) < (dst2.net & dst2.mask);
+    return (dst1.net() & dst1.mask()) < (dst2.net() & dst2.mask());
 };
 
 bool operator==(const dstNetv4_t& dst1, const dstNetv4_t& dst2) {
@@ -224,7 +224,7 @@ void DjkIPv4::fillRIB() {
     auto graphDB = graph->getPtrNodes();
     for (auto && [origID, leaves] : tree) { // перебираем узлы из дерева
         for (auto && link : (*graphDB)[origID]) { // перебираем все линки узла
-            auto netPfx = link.localIP & link.mask; // вычисляем сеть для каждого линка
+            auto netPfx = link.localIP() & link.mask(); // вычисляем сеть для каждого линка
             dstNetv4_t ribIndex {netPfx, link.mask}; // вычисляем индекс в RIB'е на основе сети и маски
             if (RIB.count(ribIndex) == 0) { // новая маршрутная запись
                 RIB[ribIndex][origID] = nodesREI[origID];

@@ -11,6 +11,7 @@ extern const array <string,6> djkStStr;
 
 int main(int argc, char *argv[])
 {
+
     if (argc == 4) {
         auto graph01 = new GraphIPv4;
         bool debugMode = (string(argv[3]) == "debug") ? true : false;
