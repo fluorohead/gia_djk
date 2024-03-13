@@ -4,8 +4,7 @@
 !/.gitignore
 !/xroconv.zip
 !/example_table.h
-!/diagram01.png
-!/diagram02.png
+!/diagram*.png
 !/readme.md
 /adjtablev4.cpp
 
