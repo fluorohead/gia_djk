@@ -15,7 +15,6 @@ bool operator==(const dstNetv4_t& dst1, const dstNetv4_t& dst2) {
 
 extern const array <string,4> djkStStr {"idle", "calculations", "ready", "error in graph data" };
 
-
 // добавляет один однонаправленный линк (смежность, adjacency) в граф
 void GraphIPv4::addLink(nodeIDv4_t nodeID, linkAdjv4_t link) {
     if (state == graphStates::Idle) {
