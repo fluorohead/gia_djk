@@ -1,10 +1,10 @@
-*
+*.* 
+!diag/*.png
 !/*.h
 !/*.cpp
 !/.gitignore
 !/xroconv.zip
 !/example_table.h
-!/diag/diagram*.png
 !/readme.md
 /adjtablev4.cpp
 
