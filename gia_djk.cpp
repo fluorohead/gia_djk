@@ -98,7 +98,7 @@ void DjkIPv4::RunCalc() {
     state = djkStates::Calculations;
     calcTree();
     if (state != djkStates::ErrInGraph) {
-        fillNodesRI();
+        fillNodesREI();
         fillRIB();
         state = djkStates::Ready;
     }
@@ -276,8 +276,8 @@ void DjkIPv4::printRIB() {
 }
 
 
-// пополняет таблицу nodeRI маршрутами до всех узлов дерева
-void DjkIPv4::fillNodesRI() {
+// пополняет таблицу nodeREI маршрутами до всех узлов дерева
+void DjkIPv4::fillNodesREI() {
     nodesREI.clear();
     for (auto && [nodeID, leaves] : tree) {
         auto routes = getRoutesToNode(nodeID);

@@ -107,7 +107,7 @@ class DjkIPv4 {
     void RunCalc();
     void initTree();
     void calcTree();
-    void fillNodesRI();
+    void fillNodesREI();
     void fillRIB();
     nodeIDv4_t getMinCumCostNodeID();
     void getPath(const reiVec &reivec, vector<reiVec> &paths);
